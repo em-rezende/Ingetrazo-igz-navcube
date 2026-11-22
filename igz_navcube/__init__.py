@@ -34,7 +34,18 @@ _main_mod = _load_local_module(
 NavCubePlugin = _main_mod.NavCubePlugin
 register = _main_mod.register
 unregister = _main_mod.unregister
-setup = _main_mod.setup
+
+
+def setup(app=None, host=None):
+    """Entry point IngeTrazo calls once at load (same thing as ``register``).
+
+    Declared as a real function instead of ``setup = register`` because the
+    community catalogue's static check looks for a top-level ``def setup``
+    inside the package's ``__init__.py``.
+    """
+    return register(app=app, host=host)
+
+
 init = _main_mod.init
 activate = _main_mod.activate
 on_load = _main_mod.on_load
