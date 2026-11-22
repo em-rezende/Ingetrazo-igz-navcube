@@ -79,10 +79,8 @@ class NavCubeOverlay(QWidget):
     cannot leave artifacts there, and it survives tab / document switches."""
 
     def __init__(self, host, settings):
-        flags = (Qt.Tool | Qt.FramelessWindowHint | Qt.WindowDoesNotAcceptFocus
-                 | Qt.NoDropShadowWindowHint)
         owner = host.main_window()
-        super().__init__(owner, flags)
+        super().__init__(owner)
         self._host = host
         self._s = settings
         self._frame = nm.frame_for_direction((0, -1, 0))
@@ -99,6 +97,8 @@ class NavCubeOverlay(QWidget):
 
         self.setAttribute(Qt.WA_NoSystemBackground, True)
         self.setAttribute(Qt.WA_TranslucentBackground, True)
+        self.setMouseTracking(True)
+
         self.setAttribute(Qt.WA_ShowWithoutActivating)
         self.setAttribute(Qt.WA_X11DoNotAcceptFocus)
         self.setMouseTracking(True)
@@ -156,6 +156,27 @@ class NavCubeOverlay(QWidget):
             self._vp = cand if (cand is not None and _valid(cand) and cand.isVisible()) else None
         return self._vp
 
+    def _attach_to_viewport(self, vp):
+        if vp is not None and self.parentWidget() is not vp:
+            was_vis = self.isVisible()
+            self.setParent(vp)
+            self.setAttribute(Qt.WA_NoSystemBackground, True)
+            self.setAttribute(Qt.WA_TranslucentBackground, True)
+            self.setMouseTracking(True)
+            if was_vis:
+                self.show()
+
+    def _target_pos(self, vp):
+        c = self._s.corner
+        if self.parentWidget() is vp:
+            x = MARGIN if c.endswith("left") else vp.width() - self.width() - MARGIN
+            y = MARGIN if c.startswith("top") else vp.height() - self.height() - MARGIN
+        else:
+            origin = vp.mapToGlobal(QPoint(0, 0))
+            x = origin.x() + (MARGIN if c.endswith("left") else vp.width() - self.width() - MARGIN)
+            y = origin.y() + (MARGIN if c.startswith("top") else vp.height() - self.height() - MARGIN)
+        return QPoint(int(x), int(y))
+
     def _sync(self):
         if not self._active:
             return
@@ -168,12 +189,8 @@ class NavCubeOverlay(QWidget):
             if self.isVisible():
                 self.hide()
             return
-        origin = vp.mapToGlobal(QPoint(0, 0))
-        c = self._s.corner
-        x = origin.x() + (MARGIN if c.endswith("left") else vp.width() - self.width() - MARGIN)
-        y = origin.y() + (MARGIN if c.startswith("top") else vp.height() - self.height() - MARGIN)
-
-        new_pos = QPoint(x, y)
+        self._attach_to_viewport(vp)
+        new_pos = self._target_pos(vp)
         if self.pos() != new_pos:
             self.move(new_pos)
         if not self.isVisible():
@@ -191,18 +208,15 @@ class NavCubeOverlay(QWidget):
             if self.isVisible():
                 self.hide()
             return
-        origin = vp.mapToGlobal(QPoint(0, 0))
-        c = self._s.corner
-        x = origin.x() + (MARGIN if c.endswith("left") else vp.width() - self.width() - MARGIN)
-        y = origin.y() + (MARGIN if c.startswith("top") else vp.height() - self.height() - MARGIN)
-
-        if self.pos() != QPoint(x, y):
-            self.move(x, y)
+        self._attach_to_viewport(vp)
+        new_pos = self._target_pos(vp)
+        if self.pos() != new_pos:
+            self.move(new_pos)
         if not self.isVisible() and self._active:
             self.show()
             self.raise_()
         self._poll()
-
+        
     # --------------------------------------------------------------- camera
     def _poll(self):
         if self._busy or not self._camera_ok:

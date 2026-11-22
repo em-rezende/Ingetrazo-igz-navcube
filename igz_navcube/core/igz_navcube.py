@@ -3,6 +3,7 @@ import importlib.util
 import os
 import sys
 import traceback
+import unicodedata
 
 from PySide6.QtCore import QPointF, Qt, QTimer
 from PySide6.QtGui import (QAction, QColor, QIcon, QPainter, QPainterPath,
@@ -104,7 +105,10 @@ def icon_gear():
 
 
 def _norm_menu_title(title: str) -> str:
-    return "".join(ch for ch in title.lower() if ch.isalnum())
+    cleaned = title.replace("&", "").lower()
+    decomposed = unicodedata.normalize("NFKD", cleaned)
+    without_accents = "".join(ch for ch in decomposed if not unicodedata.combining(ch))
+    return "".join(ch for ch in without_accents if ch.isalnum())
 
 
 # ---------------------------------------------------------------- plugin
@@ -128,7 +132,40 @@ class NavCubePlugin:
         if menubar is None:
             return None, False
 
-        target_names = {"extensions", "extensoes", "extensoes", "plugins"}
+        target_names = {
+            # en-US
+            "extensions",
+            "extension",
+            "plugins",
+            "plugin",
+            # pt-BR
+            "extensao",
+            "extensoes",
+            "complementos",
+            "complemento",
+            # es
+            "extensiones",
+            "complementos",
+            # fr
+            "extensions",
+            "extension",
+            "modules",
+            "module",
+            "extensionsetmodules",
+            # de
+            "erweiterungen",
+            "erweiterung",
+            "plugins",
+            # it
+            "estensioni",
+            "estensione",
+            "plugin",
+            # zh
+            "扩展",
+            "扩展程序",
+            "插件",
+        }
+        
         for action in menubar.actions():
             menu = action.menu()
             if menu is None:
@@ -338,29 +375,17 @@ def unregister(app=None):
 setup = init = activate = on_load = register_plugin = register
 
 
-def start_when_ready(tries=0, app=None, host=None):
-    """Register the plugin once the host window exists (never raises).
-
-    Used by ``setup(app)`` when the main window is not on screen yet and by
-    the self-start timer below. Retries every 500 ms for ~20 s, then reports
-    the traceback instead of leaving a half-registered plugin behind.
-    """
+def _autostart(tries=0):
+    """Self-start after import, retrying until the main window is visible."""
     if _plugin is not None:
-        return _plugin
+        return
     try:
-        return register(app=app, host=host)
+        register()
     except Exception:
         if tries < 40:
-            QTimer.singleShot(
-                500, lambda: start_when_ready(tries + 1, app=app, host=host))
+            QTimer.singleShot(500, lambda: _autostart(tries + 1))
         else:
             traceback.print_exc()
-    return None
-
-
-def _autostart():
-    """Self-start after import, retrying until the main window is visible."""
-    start_when_ready()
 
 
 if QApplication.instance() is not None and not os.environ.get("IGZ_NAVCUBE_NO_AUTOSTART"):
