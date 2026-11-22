@@ -1,5 +1,4 @@
 """igz_navcube - AutoCAD/Revit-style navigation cube overlay for IngeTrazo."""
-# SPDX-License-Identifier: GPL-3.0-or-later
 import importlib.util
 import os
 import sys
@@ -35,24 +34,11 @@ _main_mod = _load_local_module(
 NavCubePlugin = _main_mod.NavCubePlugin
 register = _main_mod.register
 unregister = _main_mod.unregister
-start_when_ready = _main_mod.start_when_ready
-
-
-def setup(app=None, host=None):
-    """Entry point IngeTrazo calls once at load (``setup(app)``).
-
-    The toolbar and the Extensions submenu need the main window, so if it is
-    not on screen yet the plugin registers itself in the background instead
-    of surfacing as a load error on a slow start.
-    """
-    try:
-        return register(app=app, host=host)
-    except RuntimeError:
-        return start_when_ready(app=app, host=host)
-
-
-# Common entry-point names, so whichever one a loader calls works.
-init = activate = on_load = register_plugin = setup
+setup = _main_mod.setup
+init = _main_mod.init
+activate = _main_mod.activate
+on_load = _main_mod.on_load
+register_plugin = _main_mod.register_plugin
 
 __all__ = [
     "NavCubePlugin",
@@ -63,5 +49,4 @@ __all__ = [
     "activate",
     "on_load",
     "register_plugin",
-    "start_when_ready",
 ]
