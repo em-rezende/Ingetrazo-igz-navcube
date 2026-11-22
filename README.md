@@ -34,7 +34,6 @@ igz_navcube/
 │
 ├─── core
 │  ├─── core.py
-│  ├─── demo.py
 │  ├─── dialogs.py
 │  ├─── igz_navcube.py
 │  ├─── navcube_math.py
@@ -66,7 +65,6 @@ igz_navcube/
 | `core/overlay.py` | High-performance frameless PySide6 translucent widget (`NavCubeOverlay`) handling custom 3D rendering, compass drawing, mouse interactions, dragging, and camera interpolation. |
 | `core/dialogs.py` | `SettingsDialog` offering interactive sliders, dropdowns, and checkboxes for real-time live preview. |
 | `core/navcube_math.py` | Pure-Python vector, quaternion, projection, and matrix transformation library without PySide dependencies. |
-| `core/demo.py` | Standalone test bench with a mock 3D viewport for testing and debugging outside IngeTrazo. |
 | `i18n/*.json` | Internationalization dictionary files mapping translation keys for all UI components. |
 | `icons/` | Custom vector icons (`SVG`) for the toolbar, menu items, and dialog buttons. |
 
