@@ -1,0 +1,37 @@
+{
+  "navcube.toolbar.title": "NavCube",
+  "navcube.action.toggle": "NavCube",
+  "navcube.action.toggle.tip": "显示或隐藏导航立方体",
+  "navcube.action.settings": "NavCube 设置",
+  "navcube.action.settings.tip": "调整 NavCube 的不透明度和大小",
+
+  "navcube.settings.title": "NavCube 设置",
+  "navcube.settings.opacity": "不透明度",
+  "navcube.settings.size": "大小",
+  "navcube.settings.corner": "位置",
+  "navcube.settings.hover_opaque": "悬停时完全不透明",
+  "navcube.settings.animate": "视图切换动画",
+  "navcube.settings.show_arrows": "显示旋转箭头",
+  "navcube.settings.show_compass": "显示指南针 (N/S/E/W)",
+
+  "navcube.corner.top_right": "右上角",
+  "navcube.corner.top_left": "左上角",
+  "navcube.corner.bottom_right": "右下角",
+  "navcube.corner.bottom_left": "左下角",
+
+  "navcube.face.top": "顶视",
+  "navcube.face.bottom": "底视",
+  "navcube.face.front": "前视",
+  "navcube.face.back": "后视",
+  "navcube.face.right": "右视",
+  "navcube.face.left": "左视",
+
+  "navcube.view.home": "主视图",
+  "navcube.arrow.up": "向上旋转",
+  "navcube.arrow.down": "向下旋转",
+  "navcube.arrow.left": "向左旋转",
+  "navcube.arrow.right": "向右旋转",
+  "navcube.compass.orbit_z": "绕 Z 轴旋转",
+
+  "navcube.error.camera_unavailable": "NavCube：宿主适配器中未实现相机访问（请参阅 core.py，IngeTrazoHost）。"
+}

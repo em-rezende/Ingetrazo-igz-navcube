@@ -1,0 +1,8 @@
+# Normalise line endings: the plugin ships to Linux, macOS and Windows.
+* text=auto eol=lf
+
+# Binary assets
+*.png binary
+*.jpg binary
+*.webp binary
+*.cdr binary

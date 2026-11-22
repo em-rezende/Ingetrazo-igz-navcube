@@ -1,0 +1,37 @@
+{
+  "navcube.toolbar.title": "NavCube",
+  "navcube.action.toggle": "NavCube",
+  "navcube.action.toggle.tip": "Navigationswürfel ein- oder ausblenden",
+  "navcube.action.settings": "NavCube-Einstellungen",
+  "navcube.action.settings.tip": "Deckkraft und Größe des NavCube anpassen",
+
+  "navcube.settings.title": "NavCube-Einstellungen",
+  "navcube.settings.opacity": "Deckkraft",
+  "navcube.settings.size": "Größe",
+  "navcube.settings.corner": "Position",
+  "navcube.settings.hover_opaque": "Volle Deckkraft beim Überfahren",
+  "navcube.settings.animate": "Ansichtsübergänge animieren",
+  "navcube.settings.show_arrows": "Orbit-Pfeile anzeigen",
+  "navcube.settings.show_compass": "Kompass anzeigen (N/S/E/W)",
+
+  "navcube.corner.top_right": "Oben rechts",
+  "navcube.corner.top_left": "Oben links",
+  "navcube.corner.bottom_right": "Unten rechts",
+  "navcube.corner.bottom_left": "Unten links",
+
+  "navcube.face.top": "OBEN",
+  "navcube.face.bottom": "UNTEN",
+  "navcube.face.front": "VORNE",
+  "navcube.face.back": "HINTEN",
+  "navcube.face.right": "RECHTS",
+  "navcube.face.left": "LINKS",
+
+  "navcube.view.home": "Startansicht",
+  "navcube.arrow.up": "Nach oben drehen",
+  "navcube.arrow.down": "Nach unten drehen",
+  "navcube.arrow.left": "Nach links drehen",
+  "navcube.arrow.right": "Nach rechts drehen",
+  "navcube.compass.orbit_z": "Um Z-Achse drehen",
+
+  "navcube.error.camera_unavailable": "NavCube: Kamerazugriff ist im Host-Adapter nicht implementiert (siehe core.py, IngeTrazoHost)."
+}

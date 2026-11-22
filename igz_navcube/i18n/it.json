@@ -1,0 +1,37 @@
+{
+  "navcube.toolbar.title": "NavCube",
+  "navcube.action.toggle": "NavCube",
+  "navcube.action.toggle.tip": "Mostra o nascondi il cubo di navigazione",
+  "navcube.action.settings": "Impostazioni NavCube",
+  "navcube.action.settings.tip": "Regola opacità e dimensione del NavCube",
+
+  "navcube.settings.title": "Impostazioni NavCube",
+  "navcube.settings.opacity": "Opacità",
+  "navcube.settings.size": "Dimensione",
+  "navcube.settings.corner": "Posizione",
+  "navcube.settings.hover_opaque": "Opacità massima al passaggio del mouse",
+  "navcube.settings.animate": "Anima transizioni vista",
+  "navcube.settings.show_arrows": "Mostra frecce di orbita",
+  "navcube.settings.show_compass": "Mostra bussola (N/S/E/W)",
+
+  "navcube.corner.top_right": "In alto a destra",
+  "navcube.corner.top_left": "In alto a sinistra",
+  "navcube.corner.bottom_right": "In basso a destra",
+  "navcube.corner.bottom_left": "In basso a sinistra",
+
+  "navcube.face.top": "ALTO",
+  "navcube.face.bottom": "BASSO",
+  "navcube.face.front": "FRONTE",
+  "navcube.face.back": "RETRO",
+  "navcube.face.right": "DESTRA",
+  "navcube.face.left": "SINISTRA",
+
+  "navcube.view.home": "Vista iniziale",
+  "navcube.arrow.up": "Orbita verso l'alto",
+  "navcube.arrow.down": "Orbita verso il basso",
+  "navcube.arrow.left": "Orbita a sinistra",
+  "navcube.arrow.right": "Orbita a destra",
+  "navcube.compass.orbit_z": "Orbita attorno all'asse Z",
+
+  "navcube.error.camera_unavailable": "NavCube: accesso alla fotocamera non implementato nell'adattatore host (vedi core.py, IngeTrazoHost)."
+}

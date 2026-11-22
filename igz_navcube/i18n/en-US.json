@@ -1,0 +1,36 @@
+{
+  "navcube.toolbar.title": "NavCube",
+  "navcube.action.toggle": "NavCube",
+  "navcube.action.toggle.tip": "Show or hide the navigation cube overlay",
+  "navcube.action.settings": "NavCube Settings",
+  "navcube.action.settings.tip": "Adjust the NavCube opacity and size",
+
+  "navcube.settings.title": "NavCube Settings",
+  "navcube.settings.opacity": "Opacity",
+  "navcube.settings.size": "Size",
+  "navcube.settings.corner": "Position",
+  "navcube.settings.hover_opaque": "Full opacity on hover",
+  "navcube.settings.animate": "Animate view transitions",
+  "navcube.settings.show_arrows": "Show orbit arrows",
+  "navcube.settings.show_compass": "Show compass (N/S/E/W)",
+
+  "navcube.corner.top_right": "Top right",
+  "navcube.corner.top_left": "Top left",
+  "navcube.corner.bottom_right": "Bottom right",
+  "navcube.corner.bottom_left": "Bottom left",
+
+  "navcube.face.top": "TOP",
+  "navcube.face.bottom": "BOTTOM",
+  "navcube.face.front": "FRONT",
+  "navcube.face.back": "BACK",
+  "navcube.face.right": "RIGHT",
+  "navcube.face.left": "LEFT",
+
+  "navcube.view.home": "Home view",
+  "navcube.arrow.up": "Orbit up",
+  "navcube.arrow.down": "Orbit down",
+  "navcube.arrow.left": "Orbit left",
+  "navcube.arrow.right": "Orbit right",
+
+  "navcube.error.camera_unavailable": "NavCube: camera access is not implemented in the host adapter (see core.py, IngeTrazoHost)."
+}
