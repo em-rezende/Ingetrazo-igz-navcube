@@ -1,15 +1,18 @@
-"""igz_navcube - AutoCAD/Revit-style navigation cube overlay for IngeTrazo."""
+"""
+igz_navcube - AutoCAD/Revit-style navigation cube overlay for IngeTrazo.
+
+Version: 1.0.1
+Author: Ezequiel Mendonça Rezende (ARK-Z Arquitetura Ltda)
+License: GPL-3.0-or-later
+"""
 import importlib.util
 import os
 import sys
 
+__version__ = "1.0.1"
+
 _PLUGIN_DIR = os.path.dirname(os.path.abspath(__file__))
 _CORE_DIR = os.path.join(_PLUGIN_DIR, "core")
-_PARENT_DIR = os.path.dirname(_PLUGIN_DIR)
-
-for _p in (_PARENT_DIR, _PLUGIN_DIR):
-    if _p and _p not in sys.path:
-        sys.path.insert(0, _p)
 
 
 def _load_local_module(mod_name, file_path):
@@ -46,18 +49,10 @@ def setup(app=None, host=None):
     return register(app=app, host=host)
 
 
-init = _main_mod.init
-activate = _main_mod.activate
-on_load = _main_mod.on_load
-register_plugin = _main_mod.register_plugin
-
 __all__ = [
+    "__version__",
     "NavCubePlugin",
     "register",
     "unregister",
     "setup",
-    "init",
-    "activate",
-    "on_load",
-    "register_plugin",
 ]

@@ -4,8 +4,8 @@ An interactive, CAD-style 3D Navigation Cube overlay for **IngeTrazo**, inspired
 
 ---
 - **Author:** Ezequiel M. Rezende
-- **Date:** 2026-11-21
-- **Version:** 1.0.0
+- **Date:** 2026-11-27
+- **Version:** 1.0.1
 - **License:** [GPL-3.0-or-later](https://www.gnu.org/licenses/gpl-3.0.html)
   (same as IngeTrazo — see [LICENSE](https://github.com/ingelibre/ingetrazo/blob/main/LICENSE))
 

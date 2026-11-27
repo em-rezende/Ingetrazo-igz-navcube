@@ -1,4 +1,10 @@
-"""igz_navcube core: translations (KEYS), persisted settings and the host adapter."""
+"""
+igz_navcube.core.core - Translations (KEYS), persisted settings, and host adapter.
+
+Version: 1.0.1
+Author: Ezequiel Mendonça Rezende (ARK-Z Arquitetura Ltda)
+License: GPL-3.0-or-later
+"""
 import json
 import os
 import re
@@ -8,7 +14,6 @@ from dataclasses import dataclass, fields
 
 from PySide6.QtCore import QLocale, QSettings, Qt
 from PySide6.QtWidgets import QApplication, QMainWindow, QWidget
-
 
 try:                                    # Qt6: lives in its own module
     from PySide6.QtOpenGLWidgets import QOpenGLWidget
@@ -20,6 +25,7 @@ _I18N_DIR = os.path.join(_PACKAGE_DIR, "i18n")
 DEFAULT_LOCALE = "en-US"
 _strings = {}
 
+
 # ------------------------------------------------------------------ i18n
 def _read_json(locale):
     try:
@@ -28,9 +34,9 @@ def _read_json(locale):
     except (OSError, ValueError):
         return {}
 
+
 def _host_language() -> str:
     """Retorna o idioma atual do IngeTrazo (código tipo 'en-US', 'pt-BR')."""
-    # Tenta o mesmo hook que o sunpath usa
     try:
         from core.i18n import current_language
         lang = current_language()
@@ -38,9 +44,9 @@ def _host_language() -> str:
             return str(lang).replace("_", "-")
     except Exception:
         pass
-    # Fallback: QLocale
     return QLocale().name().replace("_", "-")
-    
+
+
 def load_language(locale=None):
     """Load en-US (base keys) and overlay the requested locale, if a file exists."""
     global _strings
@@ -200,10 +206,8 @@ class IngeTrazoHost(Host):
 
     Window, viewport and camera are discovered by name. The canonical camera
     is ``vp.camera`` (a ``core.camera.OrbitCamera``) with ``eye``, ``target``
-    and ``up`` attributes. Writing to it directly bypasses the IngeTrazo
-    frame cache (``_painted_view`` / ``_frame_cache_fbo`` / ``_sil_cam``),
-    which leaves black tiles in the viewport. ``set_camera`` therefore
-    invalidates those caches after every write.
+    and ``up`` attributes, updated via ``cam.place(...)`` followed by
+    ``vp.update()``.
     """
 
     Y_UP = False
@@ -334,42 +338,23 @@ class IngeTrazoHost(Host):
         x, y, z = v
         return (x, z, -y) if self.Y_UP else (x, y, z)
 
-    # ------------------------------------------------ invalidação de cache
     def _invalidate_viewport_caches(self, vp):
-        """Invalida APENAS os caches seguros do Viewport do IngeTrazo.
-    
-        Zerar ``_painted_view`` / ``_sil_cam`` / ``_sil_cam_t`` força
-        ``_paint_frame()`` a recompor o frame inteiro em vez de reaproveitar
-        o ``_frame_cache_fbo`` — sem tocar em FBOs nem em métodos internos
-        (que podem derrubar o pipeline de pick/snap).
-        """
-        if vp is None:
-            return
-        try:
-            if hasattr(vp, "_painted_view"):
-                vp._painted_view = None
-        except Exception:
-            traceback.print_exc()
-        try:
-            if hasattr(vp, "_sil_cam"):
-                vp._sil_cam = None
-        except Exception:
-            traceback.print_exc()
-        try:
-            if hasattr(vp, "_sil_cam_t"):
-                vp._sil_cam_t = 0.0
-        except Exception:
-            traceback.print_exc()
+        """Request a viewport redraw after camera updates."""
+        if vp is not None:
+            try:
+                vp.update()
+            except Exception:
+                traceback.print_exc()
 
     def get_camera(self):
         _vp, cam = self._find_orbit_camera()
         if cam is None:
             self._diagnose()
             raise NotImplementedError(tr("navcube.error.camera_unavailable"))
-    
+
         eye_attr = cam.eye
         eye = eye_attr() if callable(eye_attr) else eye_attr
-    
+
         e = self._zup(_to_tuple(eye))
         t = self._zup(_to_tuple(cam.target))
         u = self._zup(_to_tuple(cam.up))
@@ -380,7 +365,7 @@ class IngeTrazoHost(Host):
         if cam is None:
             self._diagnose()
             raise NotImplementedError(tr("navcube.error.camera_unavailable"))
-    
+
         # lê eye atual (pode ser método) e target
         eye_attr = cam.eye
         eye = eye_attr() if callable(eye_attr) else eye_attr
@@ -389,17 +374,15 @@ class IngeTrazoHost(Host):
         dist = sum((a - b) ** 2 for a, b in zip(e, t)) ** 0.5 or 1.0
         n = sum(c * c for c in toward) ** 0.5 or 1.0
         new_eye = tuple(t[i] + dist * toward[i] / n for i in range(3))
-    
+
         # Converte para o sistema nativo do IngeTrazo (QVector3D, Y-up se for o caso)
         native_eye = self._native(new_eye)
         native_target = self._native(t)
-    
+
         eye_vec = _like(eye, native_eye)
         tgt_vec = _like(cam.target, native_target)
-    
-        # ==== CAMINHO CANÔNICO: usa place() do IngeTrazo ====
-        # place() já atualiza eye/target/up/view_matrix e invalida o cache
-        # interno do Viewport (é o mesmo caminho que o mouse do IngeTrazo usa).
+
+        # Caminho canônico: place() atualiza eye/target/up/view_matrix
         placed = False
         try:
             if hasattr(cam, "place"):
@@ -407,30 +390,14 @@ class IngeTrazoHost(Host):
                 placed = True
         except Exception:
             traceback.print_exc()
-    
-        # fallback: escreve eye/up na mão (só se place() não existir/falhar)
+
+        # Fallback: escreve eye/up manualmente apenas se place() não existir/falhar
         if not placed:
             setattr(cam, "eye", eye_vec)
             setattr(cam, "up", _like(cam.up, self._native(up)))
-    
-        # CRÍTICO: limpa o cache de frame do Viewport.
-        # Sem isso, _paint_frame() reaproveita o _frame_cache_fbo antigo
-        # e pinta apenas tiles (os "quadrinhos pretos").
+
         if vp is not None:
-            try:
-                if hasattr(vp, "_painted_view"):
-                    vp._painted_view = None
-            except Exception:
-                traceback.print_exc()
-            try:
-                if hasattr(vp, "_sil_cam"):
-                    vp._sil_cam = None
-                if hasattr(vp, "_sil_cam_t"):
-                    vp._sil_cam_t = 0.0
-            except Exception:
-                traceback.print_exc()
             try:
                 vp.update()
             except Exception:
                 traceback.print_exc()
-                

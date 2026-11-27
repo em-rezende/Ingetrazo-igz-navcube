@@ -24,7 +24,7 @@ SKIP_SUFFIXES = {".pyc", ".pyo"}
 
 
 def version():
-    """The version announced in README.md (``- **Version:** 1.0.0``)."""
+    """The version announced in README.md (``- **Version:** 1.0.1``)."""
     text = (ROOT / "README.md").read_text(encoding="utf-8")
     match = re.search(r"\*\*Version:\*\*\s*([0-9][0-9A-Za-z.+_-]*)", text)
     if not match:

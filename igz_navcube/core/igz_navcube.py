@@ -1,8 +1,13 @@
-"""igz_navcube - setup, toolbar and commands."""
+"""
+igz_navcube.core.igz_navcube - Plugin lifecycle, toolbar, and menu commands.
+
+Version: 1.0.1
+Author: Ezequiel Mendonça Rezende (ARK-Z Arquitetura Ltda)
+License: GPL-3.0-or-later
+"""
 import importlib.util
 import os
 import sys
-import traceback
 import unicodedata
 
 from PySide6.QtCore import QPointF, Qt, QTimer
@@ -28,6 +33,7 @@ def _load_sibling(alias, filename):
         sys.modules.pop(alias, None)
         raise
     return mod
+
 
 try:
     from .core import (IngeTrazoHost, NavCubeSettings, _host_language,
@@ -165,7 +171,7 @@ class NavCubePlugin:
             "扩展程序",
             "插件",
         }
-        
+
         for action in menubar.actions():
             menu = action.menu()
             if menu is None:
@@ -191,7 +197,6 @@ class NavCubePlugin:
 
         sub = QMenu("NavCube", ext_menu)
         sub.setObjectName("igz_navcube_menu")
-        sub.setIcon(_svg_icon("navcube.svg", icon_cube))
 
         act_toggle = QAction(
             _svg_icon("navcube.svg", icon_cube),
@@ -369,24 +374,3 @@ def unregister(app=None):
     if _plugin is not None:
         _plugin.teardown()
         _plugin = None
-
-
-# Common entry-point names, so whichever one the IngeTrazo loader calls works.
-setup = init = activate = on_load = register_plugin = register
-
-
-def _autostart(tries=0):
-    """Self-start after import, retrying until the main window is visible."""
-    if _plugin is not None:
-        return
-    try:
-        register()
-    except Exception:
-        if tries < 40:
-            QTimer.singleShot(500, lambda: _autostart(tries + 1))
-        else:
-            traceback.print_exc()
-
-
-if QApplication.instance() is not None and not os.environ.get("IGZ_NAVCUBE_NO_AUTOSTART"):
-    QTimer.singleShot(0, _autostart)

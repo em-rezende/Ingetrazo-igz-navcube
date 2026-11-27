@@ -5,8 +5,8 @@ Um cubo de navegação 3D interativo no estilo CAD para o **IngeTrazo**, inspira
 ---
 
 - **Autor:** Ezequiel M. Rezende
-- **Data:** 2026-11-21
-- **Versão:** 1.0.0
+- **Data:** 2026-11-27
+- **Versão:** 1.0.1
 - **Licença:** [GPL-3.0-or-later](https://www.gnu.org/licenses/gpl-3.0.html)
   (mesma do IngeTrazo — ver [LICENSE](https://github.com/ingelibre/ingetrazo/blob/main/LICENSE))
 
